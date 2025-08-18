@@ -15,3 +15,4 @@ Using the book **_Introdução a Estrutura de Dados (Waldemar Celes)_** as a ref
 ### 📋 Lists
 
 - Sequencial Lists (Arrays)
+- Linked Lists
