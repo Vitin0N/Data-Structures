@@ -1,7 +1,7 @@
 /*
-    Circular Linked Lista Implements
+    Circular Linked List Implements
 */
-#include "../LinkedList.h"
+#include "circular_LL.h"
 #include <stdlib.h>
 #include <stdio.h>
 
