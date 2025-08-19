@@ -28,6 +28,7 @@ void clearlist(struct LinkedList ** list);
 
 // Information of
 int isEmpty(struct LinkedList ** list);
+int isUnitary(struct LinkedList ** list);
 
 // Visual
 void showList(struct LinkedList ** list);

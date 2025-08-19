@@ -17,3 +17,4 @@ Using the book **_Introdução a Estrutura de Dados (Waldemar Celes)_** as a ref
 - Sequencial Lists (Arrays)
 - Linked Lists
 - Doubly Linked Lists
+- Circular Linked Lists
