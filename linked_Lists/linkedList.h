@@ -1,5 +1,5 @@
 /*
-    Implementation of Sequential Lists (ARRAYS)
+    Implementation of Linked Lists 
 */
 
 #ifndef LINKEDLIST_H  
