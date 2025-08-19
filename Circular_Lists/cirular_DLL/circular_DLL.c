@@ -6,163 +6,171 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Creation
-void createList(struct Doubly_LinList ** list){
-    *list = NULL;
+void createList(struct List ** list){
+    (*list)->start = NULL;
+    (*list)->end = NULL;
 }
 
 // Insertion
-void insertStart(struct Doubly_LinList ** list, int newElement){
+void insertStart(struct List ** list, int newElement){
     struct Doubly_LinList *new;
 
     new = (struct Doubly_LinList*)malloc(sizeof(struct Doubly_LinList));
-    if(!new){return;}
+    if(!new) return;
 
-    new->prev = NULL;
     new->data = newElement;
-    new->next = (*list);
-    if (!isEmpty(list)) {
-        (*list)->prev = new;
+    if(isEmpty(list)){
+        new->next = new;
+        new->prev = new;
+        (*list)->start = new;
+        (*list)->end = new;
+        return;
     }
-    *list = new;
+
+    new->next = (*list)->start;
+    (*list)->start->prev = new;
+    (*list)->end->next = new;
+    (*list)->start = new;
 }
 
-void insertEnd(struct Doubly_LinList ** list, int newElement){
-    if (isEmpty(list)){insertStart(list, newElement); return;}
-
-    struct Doubly_LinList *aux = *list;
-    while(aux->next){aux = aux->next;}
+void insertEnd(struct List ** list, int newElement){
+    if(isEmpty(list)) {insertStart(list, newElement); return;}
 
     struct Doubly_LinList *new;
+
     new = (struct Doubly_LinList*)malloc(sizeof(struct Doubly_LinList));
-    if(!new){return;}
-
-    new->next = NULL;
-    new->data = newElement;
-    new->prev = aux;
-    aux->next = new;
-}
-
-void insertAt(struct Doubly_LinList ** list, int newElement, int index){
-    if(isEmpty(list) || !index){insertStart(list, newElement); return;}
-
-    struct Doubly_LinList *aux = *list, *new;
-    int i = 1;
+    if(!new) return;   
     
-    while(i<index && aux){
-        i++;
-        aux = aux->next;
-    }
+    new->data = newElement;
+    new->prev = (*list)->end;
+    (*list)->end->next = new;
+    (*list)->end = new;
 
-    if(isEmpty(&aux)){insertEnd(list, newElement); return;}
+    new->next = (*list)->start;
+    (*list)->start->prev = new;
+}
+
+void insertAt(struct List ** list, int newElement, int index){
+    if(isEmpty(list)|| !index) {insertStart(list, newElement); return;}
+
+    struct Doubly_LinList *new, *aux = (*list)->start;
 
     new = (struct Doubly_LinList*)malloc(sizeof(struct Doubly_LinList));
+    if(!new) return;  
+
+    int i = 1;
+    while(i < index){
+        aux = aux->next;
+        i++;
+    }
+
+    if(aux == (*list)->end){insertEnd(list, newElement); return;}
 
     new->data = newElement;
     new->prev = aux;
     new->next = aux->next;
-
     aux->next = new;
     aux = new->next;
-    if(aux) {aux->prev = new;}
+    aux->prev = new;
 }
 
-void insertSort(struct Doubly_LinList ** list, int newElement){
+void insertSort(struct List ** list, int newElement){
     if(isEmpty(list)){insertStart(list, newElement); return;}
+    if(isUnitary(list)) {(*list)->start->data > newElement ? insertStart(list, newElement) : insertEnd(list, newElement); return;}
 
-    struct Doubly_LinList *aux = *list; 
-    int index = 0;
-    
-    while(aux && aux->data < newElement){
+    int i = 0;
+    struct Doubly_LinList *aux = (*list)->start;
+
+    do{ // check it once before turn around
+        if(aux->data >= newElement) break;
         aux = aux->next;
-        index++;
-    }
+        i++;
+    }while(aux != (*list)->start);
 
-    insertAt(list, newElement, index);
+    if(aux == (*list)->start && i > 0){insertEnd(list, newElement); return;}
+
+    insertAt(list, newElement, i);
+
 }
 
 // Deletion
-void removeStart(struct Doubly_LinList ** list){
+void removeStart(struct List ** list){
     if(isEmpty(list)) return;
+    if(isUnitary(list)){
+        free((*list)->start);
+        createList(list);
+        return;
+    }
 
-    struct Doubly_LinList *rmv = *list;
+    struct Doubly_LinList *rmv = (*list)->start;
 
-    *list = (*list)->next;
-    if(*list) (*list)->prev = NULL;
+    (*list)->start = (*list)->start->next;
+    (*list)->start->prev = (*list)->end;
+    (*list)->end->next = (*list)->start;
 
     free(rmv);
 }
 
-void removeEnd(struct Doubly_LinList ** list){
-    if(isEmpty(list)) return;
+void removeEnd(struct List ** list){
+    if(isEmpty(list)){return;}
     if(isUnitary(list)){removeStart(list); return;}
 
-    struct Doubly_LinList *aux = *list,*rmv = aux->next;
+    struct Doubly_LinList *rmv = (*list)->end;
 
-    while(rmv && rmv->next){
-        aux = aux->next;
-        rmv = rmv->next;
-    }
+    (*list)->end = (*list)->end->prev;
+    (*list)->end->next = (*list)->start;
+    (*list)->start->prev = (*list)->end;
 
-    aux->next = NULL;
     free(rmv);
 }
+void removeAt(struct List ** list, int index){
+    if(isEmpty(list)) return;
+    if(isUnitary(list) || !index){removeStart(list); return;}
 
-void removeAt(struct Doubly_LinList ** list, int index){
-    if(isEmpty(list) || !index){removeStart(list); return;}
-    if(isUnitary(list)){removeStart(list); return;}
+    struct Doubly_LinList *aux = (*list)->start, *rmv = aux->next;
 
-    struct Doubly_LinList *aux = *list, *rmv = aux->next; 
-    int i = 1;   
-
-    while(rmv->next && i<index){
+    while(--index){
         aux = aux->next;
         rmv = rmv->next;
-        i++;
     }
+
+    if(rmv == (*list)->end){removeEnd(list); return;}
+    if(rmv == (*list)->start){removeStart(list); return;}
 
     aux->next = rmv->next;
     aux = rmv->next;
-    if(aux) aux->prev = rmv->prev;
+    aux->prev = rmv->prev;
 
     free(rmv);
 }
 
-void clearList(struct Doubly_LinList ** list){
-    if(isEmpty(list)) return;
-    
-    while(!isEmpty(list)){removeStart(list);}
+void clearList(struct List ** list){
+    while(!isEmpty(list)) {removeStart(list);}
 }
 
-void deleteList(struct Doubly_LinList ** list){
-    if(!isEmpty(list)) clearList(list);
-
-    free(list);
-}
+void deleteList(struct List ** list);
 
 // Information
-int isEmpty(struct Doubly_LinList ** list){
-    if(!(*list)){
-        return 1;
-    }
+int isEmpty(struct List ** list){
+    if(!(*list)->start && !(*list)->end) return 1;
     return 0;
 }
 
-int isUnitary(struct Doubly_LinList ** list){
-    if((*list)->next == (*list)->prev){
-        return 1;
-    }
+int isUnitary(struct List ** list){
+    if(!isEmpty(list) && (*list)->end == (*list)->start) return 1;
     return 0;
 }
 
 // Visual
-void showList(struct Doubly_LinList ** list){
-    if(isEmpty(list)){printf("[]"); return;}
+void showList(struct List ** list){
+    if(isEmpty(list)) {printf("[]"); return;}
 
-    struct Doubly_LinList *aux;
+    Doubly_LinList *aux = (*list)->start;
 
-    printf("[");
-    for(aux = *list; aux ;aux = aux->next){
-        printf("%d%c", aux->data, aux->next ? ',' : ']');
+    printf("[%d%c", aux->data, aux->next != aux ? ',' : ']');
+
+    aux = aux->next;
+    for(; aux != (*list)->start; aux = aux->next){
+        printf("%d%c", aux->data, aux->next != (*list)->start ? ',' : ']');
     }
 }

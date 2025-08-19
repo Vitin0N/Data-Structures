@@ -13,29 +13,33 @@ typedef struct Doubly_LinList{
 
 }Doubly_LinList;
 
+typedef struct List{ //Now i can have the initial and the last element
+    Doubly_LinList *start;
+    Doubly_LinList *end;
+}List;
+
 
 // Creation
-void createList(struct Doubly_LinList ** list);
+void createList(struct List ** list);
 
 // Insertion
-void insertStart(struct Doubly_LinList ** list, int newElement);
-void insertEnd(struct Doubly_LinList ** list, int newElement);
-void insertAt(struct Doubly_LinList ** list, int newElement, int index);
-void insertSort(struct Doubly_LinList ** list, int newElement);
+void insertStart(struct List ** list, int newElement);
+void insertEnd(struct List ** list, int newElement);
+void insertAt(struct List ** list, int newElement, int index);
+void insertSort(struct List ** list, int newElement);
 
 // Deletion
-void removeStart(struct Doubly_LinList ** list);
-void removeEnd(struct Doubly_LinList ** list);
-void removeAt(struct Doubly_LinList ** list, int index);
-void clearList(struct Doubly_LinList ** list);
-void deleteList(struct Doubly_LinList ** list);
+void removeStart(struct List ** list);
+void removeEnd(struct List ** list);
+void removeAt(struct List ** list, int index);
+void clearList(struct List ** list);
+void deleteList(struct List ** list);
 
 // Information
-int isEmpty(struct Doubly_LinList ** list);
-int isUnitary(struct Doubly_LinList ** list);
+int isEmpty(struct List ** list);
+int isUnitary(struct List ** list);
 
 // Visual
-
-void showList(struct Doubly_LinList ** list);
+void showList(struct List ** list);
 
 #endif // CIRCULAR_DOUBLY_LINKED_LIST
