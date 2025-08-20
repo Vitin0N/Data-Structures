@@ -20,3 +20,4 @@ Using the book **_Introdução a Estrutura de Dados (Waldemar Celes)_** as a ref
 - **Circular Lists**:
     - Circular Linked Lists
     - Circular Doubly Linked Lists
+- **Stack**

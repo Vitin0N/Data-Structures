@@ -123,6 +123,7 @@ void removeEnd(struct List ** list){
 
     free(rmv);
 }
+
 void removeAt(struct List ** list, int index){
     if(isEmpty(list)) return;
     if(isUnitary(list) || !index){removeStart(list); return;}
