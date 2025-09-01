@@ -26,7 +26,7 @@ void Enqueue(struct Queue ** q, int newElement){
 }
 
 // Remove front
-void Dequeue(struct Queue ** q){
+void Dequeue(struct Queue ** q){ // Remove front, cause FIFO (First In, First Out)
     if(isEmpty(q)) return;
 
     struct Queue *rmv = *q;
