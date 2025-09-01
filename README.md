@@ -21,3 +21,4 @@ Using the book **_Introdução a Estrutura de Dados (Waldemar Celes)_** as a ref
     - Circular Linked Lists
     - Circular Doubly Linked Lists
 - **Stack**
+- **Queue**
